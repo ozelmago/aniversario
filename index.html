@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felis Mes aniversario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+                /* --- ESTILOS GENERALES Y CARRUSEL DE FONDO --- */
+        body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1f5fe 100%); 
+    background-attachment: fixed; /* Hace que el degradé se quede fijo al hacer scroll */
+}
+
+        /* Contenedor de las fotos de fondo */
+        .fondo-slideshow {
+            position: fixed ;
+            top:40px;
+            left: 0px;
+            width: 50%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        /* Cada foto individual */
+        .foto-fondo {
+            position: fixed;
+            top: 60px;
+            left: 720px;
+            width: 50%;
+            height: 50%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out; /* Transición suave de desvanecimiento */
+           border-radius: 5px;
+        }
+
+        /* Foto activa que se muestra */
+        .foto-fondo.activa {
+            opacity: 1;
+        }
+
+        /* Capa superpuesta para oscurecer y suavizar el fondo (asegura la legibilidad) */
+        .capa-filtro {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.75); /* Fondo blanco translúcido */
+            backdrop-filter: blur(2px); /* Difumina ligeramente las fotos de fondo */
+            z-index: -1;
+        }
+
+/* --- ESTILOS PARA EL LOGO GIRATORIO --- */
+.logo-contenedor {
+    position: fixed ;
+    margin-top: 30px;
+    display: flex;
+    width: 100%;
+    z-index: 10;
+    perspective: 1000px; 
+}
+
+.logo {
+    width: 300px; /* Puedes ajustar el tamaño aquí */
+    height: auto;
+    animation: girarLados 6s linear infinite; /* Ajusta los segundos si quieres que vaya más rápido o lento */
+}
+
+@keyframes girarLados {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+
+        /* --- REPRODUCTOR DE MÚSICA --- */
+        .reproductor-contenedor {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-top: 25px;
+            text-align: center;
+            width: 85%;
+            max-width: 400px;
+            border: 1px solid #e1e8ed;
+            z-index: 10;
+        }
+        
+        .reproductor-contenedor p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ba68c8;
+        }
+        audio {
+            width: 100%;
+        }
+
+        /* --- PORTADA PRINCIPAL --- */
+        .portada {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 600px;
+            z-index: 10;
+        }
+        .portada h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ff5252; /* Color sandía */
+            margin: 0 0 10px 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+        .portada .subtitulo {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+        .decoracion-corazon {
+            font-size: 24px;
+            color: #ff5252;
+            margin-top: 10px;
+            animation: latido 1.5s infinite;
+        }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- SECCIÓN DEL BUZÓN --- */
+        .buzon-seccion {
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 50px;
+            z-index: 10;
+        }
+        .buzon-seccion h2 {
+            font-size: 22px;
+            color: #444;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .instruccion {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* CONTENEDOR DE SOBRES */
+        .sobres-contenedor {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            padding: 10px;
+        }
+
+        /* ESTILO BASE DE CADA SOBRE */
+        .sobre {
+            background-color: white;
+            border-radius: 20px;
+            padding: 30px 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 5px solid transparent;
+        }
+        .sobre:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.08);
+        }
+        .icono-sobre {
+            font-size: 45px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+        .sobre:hover .icono-sobre {
+            transform: scale(1.1);
+        }
+        .sobre h3 {
+            font-size: 14px;
+            margin: 0;
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* COLORES DE LOS SOBRES */
+        .sobre-lila { border-bottom-color: #ba68c8; }
+        .sobre-lila .icono-sobre { color: #ba68c8; }
+        
+        .sobre-celeste { border-bottom-color: #4fc3f7; }
+        .sobre-celeste .icono-sobre { color: #4fc3f7; }
+        
+        .sobre-sandia { border-bottom-color: #ff5252; }
+        .sobre-sandia .icono-sobre { color: #ff5252; }
+        
+        .sobre-lima { border-bottom-color: #afb42b; }
+        .sobre-lima .icono-sobre { color: #afb42b; }
+
+        /* --- VENTANA EMERGENTE (MODAL) --- */
+        .carta-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .carta-contenido {
+            background-color: #fffdf9;
+            background-image: radial-gradient(#f3ede0 10%, transparent 11%);
+            background-size: 12px 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            position: relative;
+            animation: entradaCarta 0.4s ease;
+            border-top: 8px solid #ff5252; /* Cambiará dinámicamente con JS */
+        }
+
+        @keyframes entradaCarta {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .boton-cerrar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .boton-cerrar:hover {
+            color: #ff5252;
+        }
+        .texto-amoroso {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-line;
+            text-align: left;
+        }
+
+        /* --- SELLO DE CIERRE DE CARTA --- */
+        .sello-firma {
+            margin-top: 30px;
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: #555;
+            border-top: 1px dashed #e1e8ed;
+            padding-top: 15px;
+        }
+
+        /* --- CORAZONES EFECTO CLICK --- */
+        .corazon-flotante {
+            position: absolute;
+            font-size: 20px;
+            color: #ff5252;
+            pointer-events: none;
+            animation: flotarHaciaArriba 1s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes flotarHaciaArriba {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.4); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-contenedor">
+        <img src="karenlogo.png" alt="logo" class="logo">
+    </div>
+    <div class="fondo-slideshow">
+        <div class="foto-fondo activa" style="background-image: url('IMG_20250920_222729_380.jpg');"></div>
+        <div class="foto-fondo" style="background-image: url('IMG_20260125_165126_291.jpg');"></div>
+        <div class="foto-fondo" style="background-image: url('IMG_20260303_134321_774.jpg');"></div>
+        <div class="foto-fondo" style="background-image: url('IMG_20260307_184223_410.jpg');"></div>
+        <div class="foto-fondo" style="background-image: url('IMG_20260329_170349_108.jpg');"></div>
+        <div class="foto-fondo" style="background-image: url('IMG_20260329_170409_809.jpg');"></div>
+    </div>
+
+    <div class="reproductor-contenedor">
+        <p>Para que pienses en mi amor ♪</p>
+        <audio id="musica-fondo" controls loop>
+            <source src="karen.mpeg" type="audio/mpeg">
+            Tu navegador no soporta este elemento de audio.
+        </audio>
+    </div>
+
+    <header class="portada">
+        <h1>Feliz Aniversario, Karen</h1>
+        <p class="subtitulo">Un pequeño rincón digital dedicado a nosotros y a todo lo que eres para mí.</p>
+        <div class="decoracion-corazon">♥</div>
+    </header>
+
+    <main class="buzon-seccion">
+        <h2>Buzón de Cartas Digitales Mi Amor</h2>
+        <p class="instruccion">Haz clic en el sobre que necesites leer en este momento:</p>
+
+        <div class="sobres-contenedor">
+            <div class="sobre sobre-lila" onclick="abrirCarta(1, '#ba68c8')">
+                <div class="icono-sobre">✉</div>
+                <h3>Si me extrañas...</h3>
+            </div>
+
+            <div class="sobre sobre-celeste" onclick="abrirCarta(2, '#4fc3f7')">
+                <div class="icono-sobre">✉</div>
+                <h3>Si tuviste un mal día...</h3>
+            </div>
+
+            <div class="sobre sobre-sandia" onclick="abrirCarta(3, '#ff5252')">
+                <div class="icono-sobre">✉</div>
+                <h3>Si quieres sonreír...</h3>
+            </div>
+
+            <div class="sobre sobre-lima" onclick="abrirCarta(4, '#afb42b')">
+                <div class="icono-sobre">✉</div>
+                <h3>Para leer hoy mismo...</h3>
+            </div>
+        </div>
+    </main>
+
+    <div id="vista-carta" class="carta-modal">
+        <div class="carta-contenido" id="borde-carta">
+            <span class="boton-cerrar" onclick="cerrarCarta()">&times;</span>
+            <div id="texto-carta" class="texto-amoroso"></div>
+            <div class="sello-firma">Para Karen, de Oz ♥</div>
+        </div>
+    </div>
+
+    <script>
+        // OBJETO CON LOS TEXTOS DE LAS CARTAS SELECCIONADAS
+        const cartas = {
+            1: `"La distancia es una mentirosa de voz dulce. Te hace creer que no estamos juntos, pero yo te siento acá, en cada café que tomo a la mañana, en cada expediente que ordeno con tu nombre en la cabeza, en cada noche que miro la luna y sé que vos también la estás mirando.
+
+Te extraño, sí. Pero no es una tristeza. Es una certeza: te quiero cerca. Y vamos a lograrlo, aunque haya que desmentir kilómetros."`,
+            
+            2: `"Hoy puede que todo pese. El ballet que las ganas se escondan, tu cuerpo que no te gusta, que para mi es hermoso y divino la cabeza.
+
+Te doy permiso para estar mal. Para no fingir. Para no maquillarte. Para decir 'hoy no puedo'. Porque los días grises también tienen derecho a existir.
+
+Yo estoy acá. No para resolverte la vida, sino para acompañarte en el caos. Respirá hondo. Tomá tu té. Y recordá: este mal día también pasa. Y yo voy a estar cuando pase."
+
+"Cuando el mundo se sienta una tormenta sin puerto, pensá en mí como un faro. No puedo calmar el mar, pero puedo decirte 'por acá, no estás sola'.
+
+No hace falta que estés bien. Solo hace falta que no te escondas de mí. Mostrame la tormenta. Yo me quedo."`,
+
+
+            
+            3: `"Acordate cuando me hiciste bailar bollywood por primera vez y parecía robot con problemas de conexión. O cuando te regalé ese collar y vos pusiste cara de ay, mi amor, qué lindo… , o cuando te regale la kurta en nuetro primer mes.
+
+ cuando nos miramos el uno al otro, cuando vamos a sentarnos a abrazarnos. Que cuando tu te ries, el mundo entero seega."
+
+            Sonreí, amor. Que la vida es menos fea cuando te reís.`,
+            
+            4: `"No sé si te lo dije lo suficiente este año. Gracias. Gracias por quedarte cuando podías irte. Por mis silencios, mis intensidades, mis formas raras de querer.
+
+No soy fácil. Vos tampoco. Pero juntos, hacemos sentido. Como el agua y la luna, como la noche y la calma, como el caos y la certeza.
+
+No quiero a nadie más. No necesito nada más. Solo verte sonreír, aunque sea por un mensaje, aunque sea por una carta digital en un buzón que armé con código y con todo lo que siento.
+
+
+         No tenemos casa propia, pero tenemos una que construimos con mensajes de media noche, con mates de manzanilla virtuales, con abrazos que se dan a través de la pantalla.
+
+Tenemos un lugar que no está en ningún mapa. Está en tu risa, en tu confianza, en la forma en que decís mi nombre cuando nadie nos escucha.
+
+Esa casa no se vende. No se alquila. Solo se habita con vos.
+
+Te quiero. Hoy. Mañana. Y en todos los días que vengan."`
+        };
+
+        // LÓGICA PARA ABRIR LA CARTA Y CAMBIAR EL COLOR DEL BORDE SUPERIOR EN BASE AL SOBRE CLICKEADO
+        function abrirCarta(id, color) {
+            document.getElementById('texto-carta').innerText = cartas[id];
+            document.getElementById('borde-carta').style.borderTopColor = color;
+            document.getElementById('vista-carta').style.display = 'flex';
+        }
+
+        // LÓGICA PARA CERRAR LA CARTA
+        function cerrarCarta() {
+            document.getElementById('vista-carta').style.display = 'none';
+        }
+
+         // --- LÓGICA DEL CARRUSEL DE FOTOS DE FONDO ---
+        let indiceFoto = 0;
+        const fotos = document.querySelectorAll('.foto-fondo');
+        
+        function cambiarFotoFondo() {
+            // Quitamos la clase 'activa' a la foto actual
+            fotos[indiceFoto].classList.remove('activa');
+            
+            // Avanzamos al siguiente índice
+            indiceFoto = (indiceFoto + 1) % fotos.length;
+            
+            // Añadimos la clase 'activa' a la nueva foto
+            fotos[indiceFoto].classList.add('activa');
+        }
+        
+        // Cambia la foto de fondo cada 5 segundos (5000 milisegundos)
+        setInterval(cambiarFotoFondo, 5000);
+
+
+        // EFECTO VISUAL: CREACIÓN DE CORAZONES FLOTANTES AL HACER CLICK EN CUALQUIER PARTE
+        document.addEventListener('click', function(e) {
+            // Evitar que salgan corazones si se hace click en el botón de cerrar o dentro de la carta abierta
+            if(e.target.classList.contains('boton-cerrar') || e.target.closest('.carta-contenido')) return;
+
+            const corazon = document.createElement('div');
+            corazon.classList.add('corazon-flotante');
+            corazon.innerHTML = '♥';
+            corazon.style.left = e.pageX + 'px';
+            corazon.style.top = e.pageY + 'px';
+            
+            // Variación aleatoria horizontal sutil
+            const desplazamientoX = (Math.random() - 0.5) * 30;
+            corazon.style.setProperty('--x', desplazamientoX + 'px');
+
+            document.body.appendChild(corazon);
+
+            // Eliminar el corazón después de que termine la animación
+            setTimeout(() => {
+                corazon.remove();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
